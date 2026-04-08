@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ana Machado Boutique - Estoque</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --card: #ffffff;
+      --text: #24303f;
+      --muted: #72808e;
+      --primary: #2b3d4f;
+      --accent: #c8a14b;
+      --accent-dark: #a67f2c;
+      --danger: #d45252;
+      --success: #1d9d62;
+      --border: #e8e3d9;
+      --shadow: 0 12px 28px rgba(32, 43, 56, 0.08);
+      --sidebar-width: 260px;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(180deg, #fbfaf7 0%, var(--bg) 100%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      display: grid;
+      grid-template-columns: var(--sidebar-width) 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, #233243 0%, #1d2a37 100%);
+      color: #fff;
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 12px 22px;
+      margin-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .brand h1 {
+      font-size: 1.15rem;
+      margin: 0;
+      color: #fff;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .brand p {
+      margin: 0;
+      color: rgba(255,255,255,0.68);
+      font-size: 0.86rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .nav button {
+      all: unset;
+      cursor: pointer;
+      padding: 14px 16px;
+      border-radius: 14px;
+      color: rgba(255,255,255,0.78);
+      font-weight: 500;
+      transition: 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav button:hover,
+    .nav button.active {
+      background: rgba(200, 161, 75, 0.16);
+      color: #fff;
+      box-shadow: inset 0 0 0 1px rgba(200, 161, 75, 0.25);
+    }
+
+    .content {
+      padding: 28px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .topbar h2 {
+      margin: 0;
+      font-size: 1.7rem;
+      color: var(--primary);
+    }
+
+    .topbar p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .topbar-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: #fff7e6;
+      color: var(--accent-dark);
+      border: 1px solid #f0e0b7;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .card .value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .card small {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .panel h3 {
+      margin: 0 0 14px;
+      color: var(--primary);
+      font-size: 1.05rem;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .list-item {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fffdfa;
+    }
+
+    .list-item strong { display: block; }
+    .list-item span { color: var(--muted); font-size: 0.86rem; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font: inherit;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: #d3ba7b;
+      box-shadow: 0 0 0 4px rgba(200, 161, 75, 0.14);
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 14px;
+      padding: 13px 18px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.6; cursor: wait; transform: none; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-light { background: #f2efe7; color: var(--primary); }
+    .btn-danger { background: #faecec; color: var(--danger); }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: 1.2fr repeat(4, minmax(0, 0.55fr)) auto;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 960px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 14px 14px;
+      border-bottom: 1px solid #f1ece2;
+      vertical-align: middle;
+      font-size: 0.93rem;
+    }
+
+    thead th {
+      background: #fcfaf6;
+      color: var(--muted);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+
+    tbody tr:hover { background: #fffdf8; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .badge.low { background: #fdeaea; color: #b33b3b; }
+    .badge.ok { background: #e8f7ef; color: #1d8f5c; }
+
+    .money { font-variant-numeric: tabular-nums; }
+    .qtd { font-weight: 700; }
+
+    .status-box {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      font-size: 0.94rem;
+      display: none;
+    }
+
+    .status-box.show { display: block; }
+    .status-box.success { background: #eaf7f0; color: #1b8c57; border: 1px solid #cdebd8; }
+    .status-box.error { background: #fdeeee; color: #bf4545; border: 1px solid #f7d4d4; }
+    .status-box.info { background: #f2f6fa; color: #41566b; border: 1px solid #dde7f0; }
+
+    .empty {
+      padding: 30px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .mobile-topbar {
+      display: none;
+      padding: 14px 18px 0;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+      font-weight: 600;
+    }
+
+    @media (max-width: 1180px) {
+      .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .toolbar { grid-template-columns: 1fr 1fr 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar {
+        position: fixed;
+        left: -100%;
+        width: min(85vw, 320px);
+        transition: left 0.25s ease;
+        z-index: 20;
+      }
+      .sidebar.open { left: 0; }
+      .content { padding: 18px; }
+      .mobile-topbar { display: block; }
+      .menu-toggle { display: inline-flex; }
+      .cards { grid-template-columns: 1fr 1fr; }
+      .topbar { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 640px) {
+      .cards { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .toolbar { grid-template-columns: 1fr; }
+      .topbar h2 { font-size: 1.35rem; }
+      .content { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-topbar">
+    <button class="menu-toggle" id="menuToggle">☰ Menu</button>
+  </div>
+
+  <div class="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <h1>Ana Machado Boutique</h1>
+        <p>Controle de estoque integrado</p>
+      </div>
+
+      <nav class="nav">
+        <button class="active" data-section="dashboard">📊 Dashboard</button>
+        <button data-section="cadastro">➕ Cadastrar</button>
+        <button data-section="estoque">📦 Estoque</button>
+      </nav>
+    </aside>
+
+    <main class="content">
+      <header class="topbar">
+        <div>
+          <h2 id="pageTitle">Dashboard</h2>
+          <p>Gerencie peças, acompanhe o estoque e veja os principais números da boutique.</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="pill" id="connectionStatus">Pronto para conectar</span>
+          <button class="btn btn-light" id="refreshAllBtn" type="button">Atualizar dados</button>
+        </div>
+      </header>
+
+      <section class="section active" id="dashboardSection">
+        <div class="cards">
+          <div class="card">
+            <h3>Total de produtos</h3>
+            <div class="value" id="statProdutos">0</div>
+            <small>Linhas cadastradas no estoque</small>
+          </div>
+          <div class="card">
+            <h3>Peças em estoque</h3>
+            <div class="value" id="statPecas">0</div>
+            <small>Soma de todas as quantidades</small>
+          </div>
+          <div class="card">
+            <h3>Valor de compra</h3>
+            <div class="value money" id="statCompra">R$ 0,00</div>
+            <small>Total investido</small>
+          </div>
+          <div class="card">
+            <h3>Valor de venda</h3>
+            <div class="value money" id="statVenda">R$ 0,00</div>
+            <small>Potencial de faturamento</small>
+          </div>
+          <div class="card">
+            <h3>Estoque baixo</h3>
+            <div class="value" id="statBaixo">0</div>
+            <small>Itens com menos de 3 unidades</small>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="panel">
+            <h3>Últimos produtos carregados</h3>
+            <div class="list" id="ultimosProdutos">
+              <div class="empty">Nenhum produto carregado ainda.</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h3>Resumo rápido</h3>
+            <p class="muted" id="resumoTexto">
+              Assim que os dados da planilha forem carregados, você verá aqui um resumo automático do seu estoque.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="cadastroSection">
+        <div class="panel">
+          <h3>Cadastrar nova peça</h3>
+          <form id="produtoForm">
+            <div class="form-grid">
+              <div class="field">
+                <label for="nome">Nome do produto *</label>
+                <input id="nome" name="nome" type="text" placeholder="Ex: Vestido Midi Floral" required>
+              </div>
+              <div class="field">
+                <label for="categoria">Categoria</label>
+                <input id="categoria" name="categoria" type="text" placeholder="Ex: Vestidos">
+              </div>
+              <div class="field">
+                <label for="fornecedor">Fornecedor *</label>
+                <input id="fornecedor" name="fornecedor" type="text" placeholder="Nome do fornecedor" required>
+              </div>
+              <div class="field">
+                <label for="tamanho">Tamanho</label>
+                <select id="tamanho" name="tamanho">
+                  <option value="PP">PP</option>
+                  <option value="P">P</option>
+                  <option value="M" selected>M</option>
+                  <option value="G">G</option>
+                  <option value="GG">GG</option>
+                  <option value="Único">Único</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="cor">Cor</label>
+                <input id="cor" name="cor" type="text" placeholder="Ex: Preto">
+              </div>
+              <div class="field">
+                <label for="quantidade">Quantidade</label>
+                <input id="quantidade" name="quantidade" type="number" min="0" step="1" value="1">
+              </div>
+              <div class="field">
+                <label for="precoCompra">Preço de compra (R$)</label>
+                <input id="precoCompra" name="precoCompra" type="number" min="0" step="0.01" value="0.00">
+              </div>
+              <div class="field">
+                <label for="precoVenda">Preço de venda (R$)</label>
+                <input id="precoVenda" name="precoVenda" type="number" min="0" step="0.01" value="0.00">
+              </div>
+              <div class="field full">
+                <label for="observacao">Observação</label>
+                <textarea id="observacao" name="observacao" rows="3" placeholder="Campo opcional para anotações internas."></textarea>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="submitBtn" type="submit">Cadastrar produto</button>
+              <button class="btn btn-light" id="clearBtn" type="button">Limpar formulário</button>
+            </div>
+          </form>
+
+          <div class="status-box" id="formStatus"></div>
+        </div>
+      </section>
+
+      <section class="section" id="estoqueSection">
+        <div class="panel">
+          <h3>Estoque cadastrado</h3>
+          <div class="toolbar">
+            <input id="searchInput" type="text" placeholder="Buscar por nome do produto...">
+            <select id="filterCategoria">
+              <option value="">Todas categorias</option>
+            </select>
+            <select id="filterFornecedor">
+              <option value="">Todos fornecedores</option>
+            </select>
+            <select id="filterTamanho">
+              <option value="">Todos tamanhos</option>
+            </select>
+            <select id="filterCor">
+              <option value="">Todas cores</option>
+            </select>
+            <button class="btn btn-accent" id="refreshTableBtn" type="button">Atualizar estoque</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nome</th>
+                  <th>Categoria</th>
+                  <th>Fornecedor</th>
+                  <th>Tam.</th>
+                  <th>Cor</th>
+                  <th>Qtd</th>
+                  <th>Compra</th>
+                  <th>Venda</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="tabelaProdutos">
+                <tr><td colspan="9" class="empty">Carregando dados...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbytnQUHQXrnYBvEQH8cYpy68vODZTZa0WiCRIEg8eM/dev";
+
+    const state = {
+      produtos: [],
+      filtrados: []
+    };
+
+    const els = {
+      sidebar: document.getElementById('sidebar'),
+      menuToggle: document.getElementById('menuToggle'),
+      navButtons: Array.from(document.querySelectorAll('.nav button')),
+      sections: {
+        dashboard: document.getElementById('dashboardSection'),
+        cadastro: document.getElementById('cadastroSection'),
+        estoque: document.getElementById('estoqueSection')
+      },
+      pageTitle: document.getElementById('pageTitle'),
+      refreshAllBtn: document.getElementById('refreshAllBtn'),
+      refreshTableBtn: document.getElementById('refreshTableBtn'),
+      connectionStatus: document.getElementById('connectionStatus'),
+      form: document.getElementById('produtoForm'),
+      submitBtn: document.getElementById('submitBtn'),
+      clearBtn: document.getElementById('clearBtn'),
+      formStatus: document.getElementById('formStatus'),
+      tabelaProdutos: document.getElementById('tabelaProdutos'),
+      searchInput: document.getElementById('searchInput'),
+      filterCategoria: document.getElementById('filterCategoria'),
+      filterFornecedor: document.getElementById('filterFornecedor'),
+      filterTamanho: document.getElementById('filterTamanho'),
+      filterCor: document.getElementById('filterCor'),
+      ultimosProdutos: document.getElementById('ultimosProdutos'),
+      resumoTexto: document.getElementById('resumoTexto'),
+      statProdutos: document.getElementById('statProdutos'),
+      statPecas: document.getElementById('statPecas'),
+      statCompra: document.getElementById('statCompra'),
+      statVenda: document.getElementById('statVenda'),
+      statBaixo: document.getElementById('statBaixo')
+    };
+
+    function money(value) {
+      const number = Number(value) || 0;
+      return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL'
+      }).format(number);
+    }
+
+    function toNumber(value) {
+      if (typeof value === 'number') return value;
+      if (typeof value !== 'string') return Number(value) || 0;
+      const normalized = value.replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]/g, '');
+      return Number(normalized) || 0;
+    }
+
+    function sanitize(value) {
+      return String(value ?? '').trim();
+    }
+
+    function setConnectionStatus(text, type = 'info') {
+      els.connectionStatus.textContent = text;
+      if (type === 'success') {
+        els.connectionStatus.style.background = '#eaf7f0';
+        els.connectionStatus.style.color = '#1b8c57';
+        els.connectionStatus.style.borderColor = '#cdebd8';
+      } else if (type === 'error') {
+        els.connectionStatus.style.background = '#fdeeee';
+        els.connectionStatus.style.color = '#bf4545';
+        els.connectionStatus.style.borderColor = '#f7d4d4';
+      } else {
+        els.connectionStatus.style.background = '#fff7e6';
+        els.connectionStatus.style.color = '#a67f2c';
+        els.connectionStatus.style.borderColor = '#f0e0b7';
+      }
+    }
+
+    function showStatus(message, type = 'info') {
+      els.formStatus.className = `status-box show ${type}`;
+      els.formStatus.textContent = message;
+    }
+
+    function clearStatus() {
+      els.formStatus.className = 'status-box';
+      els.formStatus.textContent = '';
+    }
+
+    function showSection(section) {
+      const titles = {
+        dashboard: 'Dashboard',
+        cadastro: 'Cadastrar produto',
+        estoque: 'Estoque'
+      };
+
+      Object.entries(els.sections).forEach(([key, node]) => {
+        node.classList.toggle('active', key === section);
+      });
+
+      els.navButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.section === section);
+      });
+
+      els.pageTitle.textContent = titles[section] || 'Dashboard';
+      els.sidebar.classList.remove('open');
+    }
+
+    function parseRows(raw) {
+      if (!Array.isArray(raw)) return [];
+
+      if (raw.length && !Array.isArray(raw[0]) && typeof raw[0] === 'object') {
+        return raw.map(item => ({
+          id: sanitize(item.ID || item.id),
+          nome: sanitize(item.Nome || item.nome),
+          categoria: sanitize(item.Categoria || item.categoria),
+          fornecedor: sanitize(item.Fornecedor || item.fornecedor),
+          tamanho: sanitize(item.Tamanho || item.tamanho),
+          cor: sanitize(item.Cor || item.cor),
+          quantidade: toNumber(item.Quantidade || item.quantidade),
+          precoCompra: toNumber(item.Preco_Compra || item.precoCompra || item['Preço Compra'] || item.preco_compra),
+          precoVenda: toNumber(item.Preco_Venda || item.precoVenda || item['Preço Venda'] || item.preco_venda),
+          data: sanitize(item.Data || item.data),
+          observacao: sanitize(item.Observacao || item.observacao || item.Observação)
+        })).filter(item => item.nome);
+      }
+
+      const rows = raw.filter(Array.isArray);
+      if (!rows.length) return [];
+
+      let startIndex = 0;
+      const firstRow = rows[0].map(cell => sanitize(cell).toLowerCase());
+      const looksLikeHeader = firstRow.includes('nome') || firstRow.includes('categoria') || firstRow.includes('fornecedor');
+      if (looksLikeHeader) startIndex = 1;
+
+      return rows.slice(startIndex).map(row => ({
+        id: sanitize(row[0]),
+        nome: sanitize(row[1]),
+        categoria: sanitize(row[2]),
+        fornecedor: sanitize(row[3]),
+        tamanho: sanitize(row[4]),
+        cor: sanitize(row[5]),
+        quantidade: toNumber(row[6]),
+        precoCompra: toNumber(row[7]),
+        precoVenda: toNumber(row[8]),
+        data: sanitize(row[9]),
+        observacao: sanitize(row[10])
+      })).filter(item => item.nome);
+    }
+
+    function updateFilterOptions() {
+      const unique = key => [...new Set(state.produtos.map(item => sanitize(item[key])).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+
+      const maps = [
+        [els.filterCategoria, unique('categoria'), 'Todas categorias'],
+        [els.filterFornecedor, unique('fornecedor'), 'Todos fornecedores'],
+        [els.filterTamanho, unique('tamanho'), 'Todos tamanhos'],
+        [els.filterCor, unique('cor'), 'Todas cores']
+      ];
+
+      maps.forEach(([select, values, label]) => {
+        const current = select.value;
+        select.innerHTML = `<option value="">${label}</option>` + values.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`).join('');
+        if (values.includes(current)) select.value = current;
+      });
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function applyFilters() {
+      const q = sanitize(els.searchInput.value).toLowerCase();
+      const categoria = sanitize(els.filterCategoria.value).toLowerCase();
+      const fornecedor = sanitize(els.filterFornecedor.value).toLowerCase();
+      const tamanho = sanitize(els.filterTamanho.value).toLowerCase();
+      const cor = sanitize(els.filterCor.value).toLowerCase();
+
+      state.filtrados = state.produtos.filter(item => {
+        const bySearch = !q || item.nome.toLowerCase().includes(q);
+        const byCategoria = !categoria || item.categoria.toLowerCase() === categoria;
+        const byFornecedor = !fornecedor || item.fornecedor.toLowerCase() === fornecedor;
+        const byTamanho = !tamanho || item.tamanho.toLowerCase() === tamanho;
+        const byCor = !cor || item.cor.toLowerCase() === cor;
+        return bySearch && byCategoria && byFornecedor && byTamanho && byCor;
+      });
+
+      renderTable();
+    }
+
+    function renderTable() {
+      if (!state.filtrados.length) {
+        els.tabelaProdutos.innerHTML = '<tr><td colspan="9" class="empty">Nenhum produto encontrado.</td></tr>';
+        return;
+      }
+
+      els.tabelaProdutos.innerHTML = state.filtrados.map(item => {
+        const low = item.quantidade < 3;
+        return `
+          <tr>
+            <td><strong>${escapeHtml(item.nome)}</strong></td>
+            <td>${escapeHtml(item.categoria || '-')}</td>
+            <td>${escapeHtml(item.fornecedor || '-')}</td>
+            <td>${escapeHtml(item.tamanho || '-')}</td>
+            <td>${escapeHtml(item.cor || '-')}</td>
+            <td class="qtd">${item.quantidade}</td>
+            <td class="money">${money(item.precoCompra)}</td>
+            <td class="money">${money(item.precoVenda)}</td>
+            <td><span class="badge ${low ? 'low' : 'ok'}">${low ? 'Estoque baixo' : 'OK'}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateDashboard() {
+      const totalProdutos = state.produtos.length;
+      const totalPecas = state.produtos.reduce((acc, item) => acc + item.quantidade, 0);
+      const totalCompra = state.produtos.reduce((acc, item) => acc + (item.quantidade * item.precoCompra), 0);
+      const totalVenda = state.produtos.reduce((acc, item) => acc + (item.quantidade * item.precoVenda), 0);
+      const baixo = state.produtos.filter(item => item.quantidade < 3).length;
+
+      els.statProdutos.textContent = String(totalProdutos);
+      els.statPecas.textContent = String(totalPecas);
+      els.statCompra.textContent = money(totalCompra);
+      els.statVenda.textContent = money(totalVenda);
+      els.statBaixo.textContent = String(baixo);
+
+      const ultimos = state.produtos.slice(-5).reverse();
+      if (!ultimos.length) {
+        els.ultimosProdutos.innerHTML = '<div class="empty">Nenhum produto carregado ainda.</div>';
+      } else {
+        els.ultimosProdutos.innerHTML = ultimos.map(item => `
+          <div class="list-item">
+            <div>
+              <strong>${escapeHtml(item.nome)}</strong>
+              <span>${escapeHtml(item.categoria || 'Sem categoria')} • ${escapeHtml(item.tamanho || '-')} • ${escapeHtml(item.cor || '-')}</span>
+            </div>
+            <div style="text-align:right">
+              <strong>${item.quantidade} un.</strong>
+              <span>${money(item.precoVenda)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      if (!totalProdutos) {
+        els.resumoTexto.textContent = 'Ainda não há produtos válidos carregados. Assim que o Apps Script responder com os dados da planilha, este resumo aparecerá automaticamente.';
+      } else {
+        els.resumoTexto.textContent = `Hoje o estoque possui ${totalProdutos} produto(s) cadastrados, somando ${totalPecas} peça(s). O valor potencial de venda é ${money(totalVenda)} e ${baixo} item(ns) estão com estoque baixo.`;
+      }
+    }
+
+    async function carregarProdutos() {
+      setConnectionStatus('Conectando com a planilha...', 'info');
+      els.refreshAllBtn.disabled = true;
+      els.refreshTableBtn.disabled = true;
+
+      try {
+        const response = await fetch(API_URL, { method: 'GET' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const raw = await response.json();
+        state.produtos = parseRows(raw);
+        updateFilterOptions();
+        applyFilters();
+        updateDashboard();
+        setConnectionStatus(`Conectado • ${state.produtos.length} item(ns) carregados`, 'success');
+      } catch (error) {
+        console.error('Erro ao carregar produtos:', error);
+        state.produtos = [];
+        state.filtrados = [];
+        renderTable();
+        updateDashboard();
+        setConnectionStatus('Erro ao carregar a planilha', 'error');
+        showStatus('Não foi possível carregar os dados da planilha. Confira se a implantação do Apps Script está pública e se a URL está correta.', 'error');
+      } finally {
+        els.refreshAllBtn.disabled = false;
+        els.refreshTableBtn.disabled = false;
+      }
+    }
+
+    function getFormData() {
+      return {
+        nome: sanitize(document.getElementById('nome').value),
+        categoria: sanitize(document.getElementById('categoria').value),
+        fornecedor: sanitize(document.getElementById('fornecedor').value),
+        tamanho: sanitize(document.getElementById('tamanho').value),
+        cor: sanitize(document.getElementById('cor').value),
+        quantidade: String(Math.max(0, parseInt(document.getElementById('quantidade').value || '0', 10) || 0)),
+        precoCompra: String(toNumber(document.getElementById('precoCompra').value).toFixed(2)),
+        precoVenda: String(toNumber(document.getElementById('precoVenda').value).toFixed(2)),
+        observacao: sanitize(document.getElementById('observacao').value)
+      };
+    }
+
+    async function cadastrarProduto(event) {
+      event.preventDefault();
+      clearStatus();
+
+      const payload = getFormData();
+
+      if (!payload.nome || !payload.fornecedor) {
+        showStatus('Preencha pelo menos nome do produto e fornecedor.', 'error');
+        return;
+      }
+
+      els.submitBtn.disabled = true;
+      els.submitBtn.textContent = 'Cadastrando...';
+      setConnectionStatus('Enviando novo cadastro...', 'info');
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const text = await response.text();
+        if (!response.ok) throw new Error(text || `HTTP ${response.status}`);
+
+        showStatus('Produto cadastrado com sucesso.', 'success');
+        els.form.reset();
+        document.getElementById('quantidade').value = 1;
+        document.getElementById('precoCompra').value = '0.00';
+        document.getElementById('precoVenda').value = '0.00';
+        document.getElementById('tamanho').value = 'M';
+        await carregarProdutos();
+        showSection('estoque');
+      } catch (error) {
+        console.error('Erro ao cadastrar produto:', error);
+        showStatus('Não foi possível cadastrar. Confira se o Apps Script aceita POST e se a planilha/aba estão corretas.', 'error');
+        setConnectionStatus('Erro ao enviar cadastro', 'error');
+      } finally {
+        els.submitBtn.disabled = false;
+        els.submitBtn.textContent = 'Cadastrar produto';
+      }
+    }
+
+    function clearForm() {
+      els.form.reset();
+      document.getElementById('quantidade').value = 1;
+      document.getElementById('precoCompra').value = '0.00';
+      document.getElementById('precoVenda').value = '0.00';
+      document.getElementById('tamanho').value = 'M';
+      clearStatus();
+    }
+
+    els.navButtons.forEach(btn => {
+      btn.addEventListener('click', () => showSection(btn.dataset.section));
+    });
+
+    els.menuToggle.addEventListener('click', () => {
+      els.sidebar.classList.toggle('open');
+    });
+
+    els.form.addEventListener('submit', cadastrarProduto);
+    els.clearBtn.addEventListener('click', clearForm);
+    els.refreshAllBtn.addEventListener('click', carregarProdutos);
+    els.refreshTableBtn.addEventListener('click', carregarProdutos);
+    els.searchInput.addEventListener('input', applyFilters);
+    els.filterCategoria.addEventListener('change', applyFilters);
+    els.filterFornecedor.addEventListener('change', applyFilters);
+    els.filterTamanho.addEventListener('change', applyFilters);
+    els.filterCor.addEventListener('change', applyFilters);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setConnectionStatus('Inicializando...', 'info');
+      carregarProdutos();
+    });
+  </script>
+</body>
+</html>
